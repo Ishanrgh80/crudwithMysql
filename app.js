@@ -4,7 +4,9 @@ const bodyParser = require("body-parser");
 const mysql = require("mysql");
 
 const app = express();
-const port = process.env.PORT;
+const {PORT,HOST,USER,DBPASS,DBNAME} = process.env;
+console.log("user",USER);
+console.log('DBNAME ',DBNAME);
 
 app.use(bodyParser.urlencoded({extended : false}));
 app.use(bodyParser.json());
@@ -12,14 +14,14 @@ app.use(bodyParser.json());
 //mysql
 const pool = mysql.createPool({
     connectionLimit : 10,
-    host : 'localhost',
-    user : 'root',
-    password : 'Kryptonball#21',
-    database : 'nodejs_beers',
+    host : HOST,
+    user : USER,
+    password : DBPASS,
+    database : DBNAME,
 }); 
 
 //get all beers
-app.get('/beers',(req,res)=>{
+app.get('/beers/',(req,res)=>{
     pool.getConnection((err,connection)=>{
         if(err) throw err
         console.log(`connection as thread id from connectionPool ${connection.threadId}`);
@@ -124,6 +126,6 @@ app.put('/beers/:id',(req,res)=>{
 
 
 
-app.listen(port,()=>{
-    console.log(`Server running on port : ${port}`);
+app.listen(PORT,()=>{
+    console.log(`Server running on port : ${PORT}`);
 })
